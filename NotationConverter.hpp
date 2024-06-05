@@ -16,4 +16,6 @@ public:
   virtual std::string prefixToPostfix(std::string inStr) = 0;
 };
 
+
+
 #endif /* NOTATIONCONVERTERINTERFACE_H */
