@@ -1,3 +1,7 @@
+/*
+    Deque implementation copied from COP 4530 class files
+*/
+
 #include "Deque.hpp"
 #include <iostream>
 

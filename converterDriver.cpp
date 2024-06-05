@@ -72,7 +72,7 @@ int main()
   assert(nc.postfixToPrefix(postfix3) =="/ * H W - R Q");
   cout<<"Test 18 passed"<<endl;
   
-  print("All test cases passed!")
+  cout<<"All test cases passed!"<<endl;
 
 
 
