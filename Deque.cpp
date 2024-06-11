@@ -59,7 +59,7 @@ public:
 
     void popFront() {
         if (empty()) {
-            std::cerr << "Deque is empty. Cannot pop from front.\n";
+            throw std::length_error("Deque is empty. Cannot pop from front.");
             return;
         }
         Node* temp = head;

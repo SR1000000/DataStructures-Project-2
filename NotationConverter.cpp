@@ -1,6 +1,6 @@
 #include "NotationConverter.hpp"
 #include "Deque.cpp"
-#include <cassert>     //for debug purposes only
+#include <iostream>     //for std exceptions
 
 class NotationConverter : public NotationConverterInterface {
 public:
@@ -26,6 +26,13 @@ public:
 
     std::string infixToPrefix(std::string inStr) override {
         TextToDeque(inStr);
+        try {
+            i2preRecurse();
+        }
+        catch(const std::exception& e) {
+            std::cerr << e.what() << '\n';
+        }
+        
         return DequeToText(input);
     }
 
@@ -74,6 +81,35 @@ private:
         }
         
         return out;
+    }
+
+    void i2preRecurse() {
+        if(input.empty())
+            return;
+        if(input.front() == '(') {
+            input.popFront();
+            i2preRecurse();
+
+            if(isOp(input.front())) {
+                output.pushFront(input.front());
+                input.popFront();
+            } else
+                throw std::invalid_argument("Expecting Operator");
+            
+            i2preRecurse();
+
+            if(input.front() == ')')
+                input.popFront();
+            else
+                throw std::invalid_argument("Expecting )");
+                
+        } else if(isChar(input.front())) {
+            output.pushBack(input.front());
+            input.popFront();
+        } else
+            throw std::invalid_argument("Expecting char or (");
+
+
     }
 
     bool isChar(const char &c) const {
