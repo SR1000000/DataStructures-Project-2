@@ -23,7 +23,7 @@ int main()
   NotationConverter nc;
 
 
-
+  std::string x = nc.infixToPrefix(infix3);
   assert(nc.infixToPrefix(infix1) == "+ A B");
   cout<<"Test 1 passed"<<endl;
   assert(nc.infixToPrefix(infix2) == "* + X B - Y D");
