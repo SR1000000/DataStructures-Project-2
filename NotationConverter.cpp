@@ -1,6 +1,6 @@
 #include "NotationConverter.hpp"
 #include "Deque.cpp"
-#include <cassert>     //for debug purposes only
+#include <iostream>     //for std exceptions
 
 class NotationConverter : public NotationConverterInterface {
 public:
@@ -26,8 +26,14 @@ public:
 
     std::string infixToPrefix(std::string inStr) override {
         TextToDeque(inStr);
-        std::string yy = DequeToText(input);
-        return yy;
+        try {
+            i2preRecurse();
+        }
+        catch(const std::exception& e) {
+            std::cerr << e.what() << '\n';
+        }
+        
+        return DequeToText(input);
     }
 
     std::string prefixToInfix(std::string inStr) override {
@@ -54,23 +60,56 @@ private:
     //Takes an expression deque and returns it in string form (adding appropriate spaces)
     std::string DequeToText(Deque<char> x) {
         std::string out;
-        out.reserve(x.getSize() * 2);   //twice the size of "x" to account for addition of spaces
-        for(auto p = out.begin(); !x.empty(); p++) {    //loop until deque is empty
-            *p = x.front();
+        char p, q;
+        while(!x.empty()) {    //loop until deque is empty
+            p = x.front();
+            out.push_back(p);
             x.popFront();
-            if(x.empty()) break;   //x reached the end, end for loop and skip the following space skipping
-            if(*p == '(') {     //skip space for interior of parentheses
-                
-            } else if(*p == ')' && x.front() == ')') {  //skip space if ')' followed by ')'
 
-            } else if(isChar(*p) && x.front() == ')') {//skip space if "p" is operand and next is ')' 
+            if(x.empty()) break;   //x reached the end, end for loop and skip the following space skipping
+            q = x.front();  //check following element of x
+
+            if(p == '(') {     //skip space for interior of parentheses
+                
+            } else if(p == ')' && q == ')') {  //skip space if ')' followed by ')'
+
+            } else if(isChar(p) && q == ')') {//skip space if "p" is operand and next is ')' 
             
             } else 
-                *(++p) = ' ';   //Other than extra rules pertaining to (), every operator/operand is followed by a space
-            assert("breakpoint");
+                out.push_back(' ');   //Other than extra rules pertaining to (), every operator/operand is followed by a space
+            q = ' ';
         }
-        assert("breakpoint");
+        
         return out;
+    }
+
+    void i2preRecurse() {
+        if(input.empty())
+            return;
+        if(input.front() == '(') {
+            input.popFront();
+            i2preRecurse();
+
+            if(isOp(input.front())) {
+                output.pushFront(input.front());
+                input.popFront();
+            } else
+                throw std::invalid_argument("Expecting Operator");
+            
+            i2preRecurse();
+
+            if(input.front() == ')')
+                input.popFront();
+            else
+                throw std::invalid_argument("Expecting )");
+                
+        } else if(isChar(input.front())) {
+            output.pushBack(input.front());
+            input.popFront();
+        } else
+            throw std::invalid_argument("Expecting char or (");
+
+
     }
 
     bool isChar(const char &c) const {

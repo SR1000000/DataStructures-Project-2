@@ -2,7 +2,6 @@
     Deque implementation copied from COP 4530 class files
 */
 
-#include "Deque.hpp"
 #include <iostream>
 
 template <typename T>
@@ -17,7 +16,7 @@ private:
 
     Node* head;
     Node* tail;
-    size_t size;
+    int size;
 
 public:
     Deque() : head(nullptr), tail(nullptr), size(0) {}
@@ -30,7 +29,7 @@ public:
         return size == 0;
     }
 
-    size_t getSize() const {
+    int getSize() const {
         return size;
     }
 
@@ -60,7 +59,7 @@ public:
 
     void popFront() {
         if (empty()) {
-            std::cerr << "Deque is empty. Cannot pop from front.\n";
+            throw std::length_error("Deque is empty. Cannot pop from front.");
             return;
         }
         Node* temp = head;
@@ -75,7 +74,7 @@ public:
 
     void popBack() {
         if (empty()) {
-            std::cerr << "Deque is empty. Cannot pop from back.\n";
+            throw std::length_error("Deque is empty. Cannot pop from back.");
             return;
         }
         Node* temp = tail;
