@@ -25,19 +25,25 @@ public:
 
     std::string infixToPrefix(std::string inStr) override {
         TextToDeque(inStr);
-        std::string out;
         try {
-            out = i2preRecurse();
+            return i2preRecurse();
         }
         catch(const std::exception& e) {
             std::cout << e.what() << '\n';
         }
         
-        return out;
+        return "";
     }
 
     std::string prefixToInfix(std::string inStr) override {
-   
+        TextToDeque(inStr);
+        try {
+            return pre2iRecurse();
+        }
+        catch(const std::exception& e) {
+            std::cout << e.what() << '\n';
+        }
+        
         return "";
     }
 
@@ -86,6 +92,30 @@ private:
             return op + " " + left + " " + right;    
         } else
             throw std::invalid_argument("Expecting char or (");
+        return "";
+
+    }
+
+    std::string pre2iRecurse() {
+        std::string left, op, right;
+        if(input.empty())
+            return "";
+        if(isChar(input.front())) {
+            left = input.front();
+            input.popFront();
+            return left;
+        }
+        if(isOp(input.front())) {
+            op = input.front();
+            input.popFront();
+
+            left = pre2iRecurse();
+
+            right = pre2iRecurse();
+
+            return "(" + left + " " + op + " " + right + ")";    
+        } else
+            throw std::invalid_argument("Expecting operator or operand");
         return "";
 
     }
