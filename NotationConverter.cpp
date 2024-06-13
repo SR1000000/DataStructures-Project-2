@@ -18,8 +18,6 @@ public:
         catch(const std::exception& e) {
             std::cout << e.what() << '\n';
         }
-        return "";
-
         return "";  //should not reach this point, error/assertfailure if it does
     }
 
@@ -34,6 +32,7 @@ public:
         }
         return "";  //should not reach this point, error/assertfailure if it does
     }
+        
 
     std::string infixToPostfix(std::string inStr) override {
         TextToDeque(inStr);
@@ -150,92 +149,94 @@ private:
             return "(" + left + " " + op + " " + right + ")";   //Infix implementation    
         } else
             throw std::invalid_argument("Expecting operator or operand");
-        return "";  //should not reach this point, error/assertfailure if it does    }
+        return "";  //should not reach this point, error/assertfailure if it does    
+    }
 
     std::string i2postRecurse() {
         std::string left, op, right;
         if(input.empty())
             return "";
-        if(isChar(input.front())) {
-            left = input.front();
+        if(isChar(input.peekFront())) {
+            left = input.peekFront();
             input.popFront();
             return left;
         }
-        if(input.front() == '(') {
-            input.popFront();
+        if(input.peekFront() == '(') {
+            input.popFront();   //discard the '('
 
             left = i2postRecurse();
 
-            if(isOp(input.front())) {
-                op = input.front();
+            if(isOp(input.peekFront())) {
+                op = input.peekFront();
                 input.popFront();
             } else
                 throw std::invalid_argument("Expecting Operator");
             
             right = i2postRecurse();
 
-            if(input.front() == ')')
-                input.popFront();
+            if(input.peekFront() == ')')
+                input.popFront();   //discard the ')'
             else
                 throw std::invalid_argument("Expecting )");
 
             return left + " " + right + " " + op;    
         } else
-            throw std::invalid_argument("Expecting char or (");
-        return "";
-
+            throw std::invalid_argument("Expecting char or ("); //recurse should not be called on anything else
+        return "";  //should not reach this point, error/assertfailure if it does
     }
 
     std::string post2iRecurse() {
         std::string left, op, right;
         if(input.empty())
             return "";
-        if(isChar(input.back())) {
-            left = input.back();
+        if(isChar(input.peekBack())) {
+            left = input.peekBack();
             input.popBack();
             return left;
         }
-        if(isOp(input.back())) {
-            op = input.back();
+        if(isOp(input.peekBack())) {
+            op = input.peekBack();
             input.popBack();
 
             right = post2iRecurse();
 
             left = post2iRecurse();
 
-            return "(" + left + " " + op + " " + right + ")";    
+            return "(" + left + " " + op + " " + right + ")";   //Infix implementation    
         } else
             throw std::invalid_argument("Expecting operator or operand");
-        return "";
+        
+
+        return "";  //should not reach this point, error/assertfailure if it does
     }
 
     //Alternative implementation using stack form of Deque instead of queue
     std::string post2iAlt() {
         std::string left, op, right;
         while(!input.empty()) {
-            if(isChar(input.front())) {
-                left = input.front();
+            if(isChar(input.peekFront())) {
+                left = input.peekFront();
                 stak.pushBack(left);
                 input.popFront();
-            } else if(isOp(input.front())) {
-                op = input.front();
+            } else if(isOp(input.peekFront())) {
+                op = input.peekFront();
                 input.popFront();
 
-                right = stak.back();
+                right = stak.peekBack();
                 stak.popBack();
 
-                left = stak.back();
+                left = stak.peekBack();
                 stak.popBack();
 
                 stak.pushBack("(" + left + " " + op + " " + right + ")");    
             } else
                 throw std::invalid_argument("Expecting operator or operand");
         }
-        if(stak.getSize() == 1) {
-            right = stak.back();
+        if(stak.sizeOf() == 1) {
+            right = stak.peekBack();
             stak.popBack();
         } else 
-            throw std::out_of_range("stak size should be 1, is " +std::to_string(stak.getSize()) + " instead");
+            throw std::out_of_range("stak size should be 1, is " +std::to_string(stak.sizeOf()) + " instead");
         return  right;
     }
 
