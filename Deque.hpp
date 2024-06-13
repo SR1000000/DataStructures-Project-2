@@ -30,7 +30,7 @@ public:
     void popBack();
     T& peekFront() const;
     T& peekBack() const;
-    void clear();
+    void expunge();
 };
 
 #endif /* DEQUE_H */

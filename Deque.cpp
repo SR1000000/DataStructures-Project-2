@@ -2,7 +2,6 @@
     Deque implementation, inspired by COP 4530 class file implementation. 
 */
 
-#include "Deque.hpp"
 #include <iostream>
 
 template <typename T>
@@ -10,14 +9,16 @@ Deque<T>::Deque() : head(nullptr), tail(nullptr), size(0) {}
 
 template <typename T>
 Deque<T>::~Deque() {
-    clear();
+    expunge();  
 }
 
+//check if empty
 template <typename T>
 bool Deque<T>::empty() const {
     return size == 0;
 }
 
+//return size, tracked on push/pop
 template <typename T>
 int Deque<T>::sizeOf() const {
     return size;
@@ -103,9 +104,9 @@ T& Deque<T>::peekBack() const {
     return tail->elem;
 }
 
-//for deconstruction
+//for deconstruction, not to be confused with empty() which is a check
 template <typename T>
-void Deque<T>::clear() {
+void Deque<T>::expunge() {
     while (!empty()) {
         popFront();
     }
