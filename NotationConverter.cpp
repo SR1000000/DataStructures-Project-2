@@ -9,16 +9,36 @@ public:
         input.empty();
     }
     std::string postfixToInfix(std::string inStr) override {
-
+        TextToDeque(inStr);
+        try {
+            return post2iRecurse();
+        }
+        catch(const std::exception& e) {
+            std::cout << e.what() << '\n';
+        }
         return "";
     }
 
     std::string postfixToPrefix(std::string inStr) override {
-        
+        TextToDeque(inStr);
+        try {
+            TextToDeque(post2iRecurse());
+            return i2preRecurse();
+        }
+        catch(const std::exception& e) {
+            std::cout << e.what() << '\n';
+        }
         return "";
     }
 
     std::string infixToPostfix(std::string inStr) override {
+        TextToDeque(inStr);
+        try {
+            return i2postRecurse();
+        }
+        catch(const std::exception& e) {
+            std::cout << e.what() << '\n';
+        }
         
         return "";
     }
@@ -48,7 +68,14 @@ public:
     }
 
     std::string prefixToPostfix(std::string inStr) override {
-        
+        TextToDeque(inStr);
+        try {
+            TextToDeque(pre2iRecurse());
+            return i2postRecurse();
+        }
+        catch(const std::exception& e) {
+            std::cout << e.what() << '\n';
+        }
         return "";
     }
 
@@ -117,9 +144,65 @@ private:
         } else
             throw std::invalid_argument("Expecting operator or operand");
         return "";
+    }
+
+    std::string i2postRecurse() {
+        std::string left, op, right;
+        if(input.empty())
+            return "";
+        if(isChar(input.front())) {
+            left = input.front();
+            input.popFront();
+            return left;
+        }
+        if(input.front() == '(') {
+            input.popFront();
+
+            left = i2postRecurse();
+
+            if(isOp(input.front())) {
+                op = input.front();
+                input.popFront();
+            } else
+                throw std::invalid_argument("Expecting Operator");
+            
+            right = i2postRecurse();
+
+            if(input.front() == ')')
+                input.popFront();
+            else
+                throw std::invalid_argument("Expecting )");
+
+            return left + " " + right + " " + op;    
+        } else
+            throw std::invalid_argument("Expecting char or (");
+        return "";
 
     }
 
+    std::string post2iRecurse() {
+        std::string left, op, right;
+        if(input.empty())
+            return "";
+        if(isChar(input.back())) {
+            left = input.back();
+            input.popBack();
+            return left;
+        }
+        if(isOp(input.back())) {
+            op = input.back();
+            input.popBack();
+
+            right = post2iRecurse();
+
+            left = post2iRecurse();
+
+            return "(" + left + " " + op + " " + right + ")";    
+        } else
+            throw std::invalid_argument("Expecting operator or operand");
+        return "";
+    }
+    
     bool isChar(const char &c) const {
         return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
     }
