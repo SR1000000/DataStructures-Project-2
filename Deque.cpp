@@ -1,5 +1,5 @@
 /*
-    Deque implementation copied from COP 4530 class files
+    Deque implementation, inspired by COP 4530 class file implementation. 
 */
 
 #include "Deque.hpp"
@@ -19,16 +19,17 @@ bool Deque<T>::empty() const {
 }
 
 template <typename T>
-int Deque<T>::getSize() const {
+int Deque<T>::sizeOf() const {
     return size;
 }
 
+//push to front (or onto left) of deque
 template <typename T>
-void Deque<T>::pushFront(const T& value) {
-    Node* newNode = new Node(value);
-    if (empty()) {
+void Deque<T>::pushFront(const T& v) {
+    Node* newNode = new Node(v);
+    if (empty())
         head = tail = newNode;
-    } else {
+    else {
         newNode->next = head;
         head->prev = newNode;
         head = newNode;
@@ -36,12 +37,13 @@ void Deque<T>::pushFront(const T& value) {
     size++;
 }
 
+//push to back (or onto right) of deque
 template <typename T>
-void Deque<T>::pushBack(const T& value) {
-    Node* newNode = new Node(value);
-    if (empty()) {
+void Deque<T>::pushBack(const T& v) {
+    Node* newNode = new Node(v);
+    if (empty())
         head = tail = newNode;
-    } else {
+    else {
         tail->next = newNode;
         newNode->prev = tail;
         tail = newNode;
@@ -49,26 +51,28 @@ void Deque<T>::pushBack(const T& value) {
     size++;
 }
 
+//pop front/left into nether
 template <typename T>
 void Deque<T>::popFront() {
     if (empty()) {
-        throw std::length_error("Deque is empty. Cannot pop from front.");
+        throw std::length_error("Deque is empty. No pop.");
         return;
     }
-    Node* temp = head;
+    Node* tmp = head;
     head = head->next;
     if (head)
         head->prev = nullptr;
     else
         tail = nullptr;
-    delete temp;
+    delete tmp;
     size--;
 }
 
+//pop back/right into nether
 template <typename T>
 void Deque<T>::popBack() {
     if (empty()) {
-        throw std::length_error("Deque is empty. Cannot pop from back.");
+        throw std::length_error("Deque is empty. No pop.");
         return;
     }
     Node* temp = tail;
@@ -81,22 +85,25 @@ void Deque<T>::popBack() {
     size--;
 }
 
+//peek at front/left, does not pop
 template <typename T>
-T& Deque<T>::front() const {
+T& Deque<T>::peekFront() const {
     if (empty()) {
-        throw std::out_of_range("Deque is empty. Cannot access front element.");
+        throw std::out_of_range("Deque is empty. No front element.");
     }
-    return head->data;
+    return head->elem;
 }
 
+//peek at back/right, does not pop
 template <typename T>
-T& Deque<T>::back() const {
+T& Deque<T>::peekBack() const {
     if (empty()) {
-        throw std::out_of_range("Deque is empty. Cannot access back element.");
+        throw std::out_of_range("Deque is empty. No back element.");
     }
-    return tail->data;
+    return tail->elem;
 }
 
+//for deconstruction
 template <typename T>
 void Deque<T>::clear() {
     while (!empty()) {
