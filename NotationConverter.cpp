@@ -4,14 +4,16 @@
 
 class NotationConverter : public NotationConverterInterface {
 public:
-    NotationConverter() : input() {}
+    NotationConverter() : input(), stak() {}
     ~NotationConverter() {
         input.empty();
+        stak.empty();
     }
+
     std::string postfixToInfix(std::string inStr) override {
         TextToDeque(inStr);
         try {
-            return post2iRecurse();
+            return post2iAlt();
         }
         catch(const std::exception& e) {
             std::cout << e.what() << '\n';
@@ -22,7 +24,7 @@ public:
     std::string postfixToPrefix(std::string inStr) override {
         TextToDeque(inStr);
         try {
-            TextToDeque(post2iRecurse());
+            TextToDeque(post2iAlt());
             return i2preRecurse();
         }
         catch(const std::exception& e) {
@@ -81,6 +83,7 @@ public:
 
 private:
     Deque<char> input;
+    Deque<std::string> stak;
 
     //Takes an expression string and puts it into the object's "input" deque
     void TextToDeque(std::string text) {
@@ -202,7 +205,37 @@ private:
             throw std::invalid_argument("Expecting operator or operand");
         return "";
     }
-    
+
+    //Alternative implementation using stack form of Deque instead of queue
+    std::string post2iAlt() {
+        std::string left, op, right;
+        while(!input.empty()) {
+            if(isChar(input.front())) {
+                left = input.front();
+                stak.pushBack(left);
+                input.popFront();
+            } else if(isOp(input.front())) {
+                op = input.front();
+                input.popFront();
+
+                right = stak.back();
+                stak.popBack();
+
+                left = stak.back();
+                stak.popBack();
+
+                stak.pushBack("(" + left + " " + op + " " + right + ")");    
+            } else
+                throw std::invalid_argument("Expecting operator or operand");
+        }
+        if(stak.getSize() == 1) {
+            right = stak.back();
+            stak.popBack();
+        } else 
+            throw std::out_of_range("stak size should be 1, is " +std::to_string(stak.getSize()) + " instead");
+        return  right;
+    }
+
     bool isChar(const char &c) const {
         return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
     }
