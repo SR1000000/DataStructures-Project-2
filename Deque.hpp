@@ -1,3 +1,7 @@
+/*
+    Header file for Deque implementation
+*/
+
 #ifndef DEQUE_H
 #define DEQUE_H
 
@@ -5,27 +9,27 @@ template <typename T>
 class Deque {
 private:
     struct Node {
-        T data;
+        T elem;
         Node* prev;
         Node* next;
-        Node(const T& value) : data(value), prev(nullptr), next(nullptr) {}
+        Node(const T& value) : elem(value), prev(nullptr), next(nullptr) {}
     };
 
     Node* head;
     Node* tail;
-    int size;
+    int size;   //for O(1) sizing
 
 public:
     Deque();
     ~Deque();
     bool empty() const;
-    int getSize() const;
-    void pushFront(const T& value);
-    void pushBack(const T& value);
+    int sizeOf() const;
+    void pushFront(const T& v);
+    void pushBack(const T& v);
     void popFront();
     void popBack();
-    T& front() const;
-    T& back() const;
+    T& peekFront() const;
+    T& peekBack() const;
     void clear();
 };
 
