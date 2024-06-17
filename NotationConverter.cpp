@@ -2,6 +2,7 @@
 #include "Deque.hpp"
 #include "Deque.cpp"
 #include <iostream>     //for std exceptions
+#include <stdexcept>    //for specific logic error std exceptions
 
 class NotationConverter : public NotationConverterInterface {
 public:

@@ -3,6 +3,7 @@
 */
 
 #include <iostream>
+#include <stdexcept> //for specific logic exceptions
 
 template <typename T>
 Deque<T>::Deque() : head(nullptr), tail(nullptr), size(0) {}
