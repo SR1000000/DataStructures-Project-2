@@ -2,6 +2,7 @@
     Deque implementation, inspired by COP 4530 class file implementation. 
 */
 
+#include "Deque.hpp"
 #include <iostream>
 #include <stdexcept> //for specific logic exceptions
 
